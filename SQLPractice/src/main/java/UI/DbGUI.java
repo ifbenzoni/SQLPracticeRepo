@@ -2,6 +2,8 @@ package UI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -263,7 +265,21 @@ public class DbGUI {
     				{ "id 1", "item 1", "description 1" },
     				{ "id 1", "item 2", "description 2" }
     		};
-    		displayTable = new JTable(data, columnNames);
+    		displayTable = new JTable(data, columnNames) {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+    			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+    				Component component = super.prepareRenderer(renderer, row, column);
+    				int rendererWidth = component.getPreferredSize().width;
+    				TableColumn tableColumn = getColumnModel().getColumn(column);
+    				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+    				return component;
+    			}
+				
+    		};
+    		displayTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     		
     		JScrollPane jScrollPane = new JScrollPane(displayTable);
     		add(jScrollPane, BorderLayout.NORTH);
@@ -271,7 +287,7 @@ public class DbGUI {
     		JPanel editTable = new JPanel(new GridLayout(0, 2, 5, 0));
     		
 	    	Integer[] ids = { 1, 2 };
-	    	idSelect = new JComboBox<>(ids);
+	    	idSelect = new JComboBox<>(ids); 	
 	    	idSelect.setEditable(false);
 	    	editTable.add(idSelect);
     		
