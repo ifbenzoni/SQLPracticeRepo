@@ -8,6 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * controller for connecting to database
+ * 
+ * @author Isaiah
+ */
 public class APIController {
 	
 	/**
