@@ -29,32 +29,32 @@ public class DbGUI {
     	Connection connection;
     	boolean exists = false;
     	
+	try {
+		connection = DriverManager.getConnection
+				("jdbc:mysql://localhost/?user=java&password=password");
+		ResultSet resultSet = connection.getMetaData().getCatalogs();
+
+		while (resultSet.next()) {
+			if (resultSet.getString(1).contains("dbpractice")) {
+				exists = true;
+			}
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+
+	if (!exists) {
 		try {
 			connection = DriverManager.getConnection
 					("jdbc:mysql://localhost/?user=java&password=password");
-			ResultSet resultSet = connection.getMetaData().getCatalogs();
-
-			while (resultSet.next()) {
-				if (resultSet.getString(1).contains("dbpractice")) {
-					exists = true;
-				}
-			}
+			Statement statement = connection.createStatement();
+			statement.executeUpdate("CREATE DATABASE dbPractice");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	
-		if (!exists) {
-			try {
-				connection = DriverManager.getConnection
-						("jdbc:mysql://localhost/?user=java&password=password");
-				Statement statement = connection.createStatement();
-				statement.executeUpdate("CREATE DATABASE dbPractice");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-    	
-		//start GUI
+	}
+
+	//start GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 @SuppressWarnings("unused")
