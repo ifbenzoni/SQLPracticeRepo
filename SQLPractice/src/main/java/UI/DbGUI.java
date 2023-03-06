@@ -7,6 +7,12 @@ import javax.swing.table.TableColumn;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import controller.APIController;
 
 public class DbGUI {
@@ -18,6 +24,37 @@ public class DbGUI {
 	private static APIController controller = new APIController();
 
     public static void main(String[] args) {
+    	
+    	//create schema if DNE
+    	Connection connection;
+    	boolean exists = false;
+    	
+		try {
+			connection = DriverManager.getConnection
+					("jdbc:mysql://localhost/?user=java&password=password");
+			ResultSet resultSet = connection.getMetaData().getCatalogs();
+
+			while (resultSet.next()) {
+				if (resultSet.getString(1).contains("dbpractice")) {
+					exists = true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+		if (!exists) {
+			try {
+				connection = DriverManager.getConnection
+						("jdbc:mysql://localhost/?user=java&password=password");
+				Statement statement = connection.createStatement();
+				statement.executeUpdate("CREATE DATABASE dbPractice");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+    	
+		//start GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 @SuppressWarnings("unused")
